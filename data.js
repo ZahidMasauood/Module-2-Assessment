@@ -19,7 +19,7 @@ async function loadData() {
     }
 }
 
-async function saveData(books) {
+async function saveData(movies) {
     try {
         const config = {
             "headers": {
@@ -32,7 +32,7 @@ async function saveData(books) {
         // 1. the URL endpoint
         // 2. the data to send over
         // 3. configuration options
-        const response = await axios.put(`${JSON_BIN_BASE_URL}/b/${JSON_BIN_ID}`, books, config);
+        const response = await axios.put(`${JSON_BIN_BASE_URL}/b/${JSON_BIN_ID}`, movies, config);
         return response.data;
 
     } catch (e) {
@@ -42,14 +42,51 @@ async function saveData(books) {
     }
 }
 
-function addBook(books, title, author, pages) {
-    const newBook = {
+function addMovies(movies, title, director, minutes) {
+    const newMovies = {
         "id": Math.floor(Math.random() * 10000 + 1),
         "title": title,
-        "author": author,
-        "pages": pages
+        "director": director,
+        "minutes": minutes
     }
 
-    books.push(newBook);
-    saveData(books);
+    movies.push(newMovies);
+    saveData(movies);
+}
+
+function modifyMovies(movies, id, title, director, minutes)
+{
+   
+    for(let m of movies)
+    {
+        if (m.id==id)
+        {   
+            
+                m.title=title;
+                m.director=director;
+                m.minutes=minutes;
+                
+            
+            break;
+        }
+    }
+   
+    return saveData(movies);
+}
+
+function deleteMovies(movies,id)
+{
+    let deleteIndex = -1;
+    let currentIndex = 0;
+    for(let m of movies)
+    {
+        if (m.id==id)
+        {
+            deleteIndex=currentIndex;
+            break; 
+        }
+        currentIndex++;
+    }
+    movies.splice(deleteIndex,1);
+    return saveData(movies);
 }
